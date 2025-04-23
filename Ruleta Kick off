@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RULETA KICK OFF</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/zarocknz/javascript-winwheel@2.7.0/Winwheel.min.js"></script>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      text-align: center;
+      padding: 2rem;
+      color: #333;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    input, button {
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+    }
+    input {
+      width: 60%;
+    }
+    button {
+      background-color: #ff6f61;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff3b2e;
+    }
+    #ruleta-container {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      margin: 2rem auto 0;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    #puntero {
+      position: absolute;
+      top: -10px;
+      left: 240px;
+      z-index: 2;
+      width: 20px;
+      height: 40px;
+      background: red;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    #resultado {
+      font-size: 2rem;
+      margin-top: 2rem;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤘 RULETA KICK OFF 😎</h1>
+  <input type="text" id="nombreInput" placeholder="Escribe un nombre">
+  <button onclick="agregarNombre()">➕ Agregar</button>
+  <button onclick="girarRuleta()">🍀 Girar Ruleta</button>
+
+  <div id="ruleta-container">
+    <div id="puntero"></div>
+    <canvas id="canvas" width="500" height="500"></canvas>
+  </div>
+
+  <div id="resultado"></div>
+
+  <script>
+    let nombres = [];
+    let ruleta;
+
+    function crearRuleta() {
+      const segmentos = nombres.map(nombre => ({ fillStyle: getColor(), text: nombre }));
+
+      ruleta = new Winwheel({
+        'canvasId': 'canvas',
+        'numSegments': segmentos.length,
+        'outerRadius': 230,
+        'segments': segmentos,
+        'animation': {
+          'type': 'spinToStop',
+          'duration': 5,
+          'spins': 8,
+          'callbackFinished': mostrarGanador
+        }
+      });
+    }
+
+    function getColor() {
+      const hue = Math.floor(Math.random() * 360);
+      return `hsl(${hue}, 85%, 75%)`;
+    }
+
+    function agregarNombre() {
+      const input = document.getElementById("nombreInput");
+      const nombre = input.value.trim();
+      if (nombre) {
+        nombres.push(nombre);
+        input.value = "";
+        crearRuleta();
+      }
+    }
+
+    function girarRuleta() {
+      if (!ruleta || nombres.length === 0) {
+        document.getElementById("resultado").textContent = "❌ No hay nombres en la ruleta.";
+        return;
+      }
+      ruleta.startAnimation();
+    }
+
+    function mostrarGanador(segment) {
+      const ganador = segment.text;
+      document.getElementById("resultado").textContent = `🎉 ¡${ganador} te toca!`;
+      nombres = nombres.filter(nombre => nombre !== ganador);
+      crearRuleta();
+    }
+  </script>
+</body>
+</html>
