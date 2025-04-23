@@ -160,7 +160,55 @@
   <div id="resultado"></div>
 
   <script>
-    // ... existing code ...
+    let nombres = [];
+    let ruleta;
+
+    function crearRuleta() {
+      const segmentos = nombres.map(nombre => ({ fillStyle: getColor(), text: nombre }));
+
+      ruleta = new Winwheel({
+        'canvasId': 'canvas',
+        'numSegments': segmentos.length,
+        'outerRadius': 230,
+        'segments': segmentos,
+        'animation': {
+          'type': 'spinToStop',
+          'duration': 5,
+          'spins': 8,
+          'callbackFinished': mostrarGanador
+        }
+      });
+    }
+
+    function getColor() {
+      const hue = Math.floor(Math.random() * 360);
+      return `hsl(${hue}, 85%, 65%)`;
+    }
+
+    function agregarNombre() {
+      const input = document.getElementById("nombreInput");
+      const nombre = input.value.trim();
+      if (nombre) {
+        nombres.push(nombre);
+        input.value = "";
+        crearRuleta();
+      }
+    }
+
+    function girarRuleta() {
+      if (!ruleta || nombres.length === 0) {
+        document.getElementById("resultado").textContent = "❌ No hay nombres en la ruleta.";
+        return;
+      }
+      ruleta.startAnimation();
+    }
+
+    function mostrarGanador(segment) {
+      const ganador = segment.text;
+      document.getElementById("resultado").textContent = `👉 ¡${ganador} TE TOCA!`;
+      nombres = nombres.filter(nombre => nombre !== ganador);
+      crearRuleta();
+    }
   </script>
 </body>
-</html>
+</html> 
