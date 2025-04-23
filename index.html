@@ -8,15 +8,27 @@
   <script src="https://cdn.jsdelivr.net/gh/zarocknz/javascript-winwheel@2.7.0/Winwheel.min.js"></script>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(to right, #fceabb, #f8b500);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #3c3b3f, #605c3c, #d35400, #000000);
+      background-size: 600% 600%;
+      animation: metallicBackground 20s ease infinite;
       text-align: center;
       padding: 2rem;
-      color: #333;
+      color: #f0f0f0;
+      position: relative;
     }
+
+    @keyframes metallicBackground {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
+      color: #ffa726;
+      text-shadow: 2px 2px 4px #000;
     }
     input, button {
       padding: 0.5rem 1rem;
@@ -27,55 +39,60 @@
     }
     input {
       width: 60%;
+      background-color: #222;
+      color: #f5f5f5;
+      border: 1px solid #ffa726;
     }
     button {
-      background-color: #ff6f61;
+      background-color: #d35400;
       color: white;
       cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
     button:hover {
-      background-color: #ff3b2e;
+      background-color: #ff6f00;
     }
-    #ruleta-container {
+    #canvas-container {
       position: relative;
-      width: 500px;
-      height: 500px;
-      margin: 2rem auto 0;
+      display: inline-block;
+      margin-top: 2rem;
     }
     #canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      display: block;
+      border: 5px solid #ffa726;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #d35400;
     }
     #puntero {
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid #ff5722;
       position: absolute;
-      top: -10px;
-      left: 240px;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
       z-index: 2;
-      width: 20px;
-      height: 40px;
-      background: red;
-      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     }
     #resultado {
       font-size: 2rem;
       margin-top: 2rem;
-      color: #2e7d32;
+      color: #00e676;
+      text-shadow: 1px 1px 2px #000;
     }
   </style>
 </head>
 <body>
-  <h1>🤘 RULETA KICK OFF 😎</h1>
+  <h1>🤘😎 RULETA KICK OFF 😎🤘</h1>
   <input type="text" id="nombreInput" placeholder="Escribe un nombre">
   <button onclick="agregarNombre()">➕ Agregar</button>
   <button onclick="girarRuleta()">🍀 Girar Ruleta</button>
 
-  <div id="ruleta-container">
-    <div id="puntero"></div>
+  <div id="canvas-container">
     <canvas id="canvas" width="500" height="500"></canvas>
+    <div id="puntero"></div>
   </div>
-
   <div id="resultado"></div>
 
   <script>
@@ -101,7 +118,7 @@
 
     function getColor() {
       const hue = Math.floor(Math.random() * 360);
-      return `hsl(${hue}, 85%, 75%)`;
+      return `hsl(${hue}, 85%, 65%)`;
     }
 
     function agregarNombre() {
@@ -124,7 +141,7 @@
 
     function mostrarGanador(segment) {
       const ganador = segment.text;
-      document.getElementById("resultado").textContent = `🎉 ¡${ganador} te toca!`;
+      document.getElementById("resultado").textContent = `👉 ¡${ganador} TE TOCA!`;
       nombres = nombres.filter(nombre => nombre !== ganador);
       crearRuleta();
     }
